@@ -10,12 +10,12 @@ class StartupsController < ApplicationController
   def show
     @startup = Startup.find(params[:id])
 
-    startuptoshow = Startup.where(name: @startup.name)
+    # startuptoshow = Startup.where(name: @startup.name)
     # startuptoshow = Startup.last
-    # nameto = startuptoshow.name
+    nameto = @startup.name.downcase
 
     # url = "https://www.crunchbase.com/organization/#{name}"
-    url = "https://www.welcometothejungle.co/companies/blablacar"
+    url = "https://www.welcometothejungle.co/companies/#{nameto}"
 
     html_file = open(url).read
     html_doc = Nokogiri::HTML(html_file)
@@ -33,8 +33,8 @@ class StartupsController < ApplicationController
 
     creation = element[0]
     effectif = element[1]
-    startuptoshow.update(creation: creation)
-    startuptoshow.update(people: effectif)
+    @startup.update(creation: creation)
+    @startup.update(people: effectif)
 
 
     counter = 0
@@ -47,7 +47,7 @@ class StartupsController < ApplicationController
     end
 
     city = city_array[1]
-    startuptoshow.update(address: city)
+    @startup.update(address: city)
 
     puts creation
     puts effectif
@@ -63,7 +63,7 @@ class StartupsController < ApplicationController
     end
     description = description_array[0]
     puts description
-    startuptoshow.update(activity: description)
+    @startup.update(activity: description)
   end
 
   def new
